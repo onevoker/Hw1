@@ -9,6 +9,7 @@ public final class PopularCommandExecutor {
     private final static Logger LOGGER = LogManager.getLogger();
     private final ConnectionManager manager;
     private final int maxAttempts;
+    private final static String ERROR_MESSAGE = "Cant connect";
 
     public PopularCommandExecutor(ConnectionManager manager, int maxAttempts) {
         this.manager = manager;
@@ -23,14 +24,12 @@ public final class PopularCommandExecutor {
     void tryExecute(String command) {
         for (int i = 0; i < maxAttempts; i++) {
             try (Connection connection = this.manager.getConnection()) {
-                if (connection instanceof StableConnection) {
-                    connection.execute(command);
-                    return;
-                }
+                connection.execute(command);
+                return;
             } catch (Exception exception) {
                 LOGGER.info(exception);
             }
         }
-        throw new ConnectionException();
+        throw new ConnectionException(ERROR_MESSAGE);
     }
 }

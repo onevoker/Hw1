@@ -29,9 +29,9 @@ public class Task3Test {
     }
 
     @Test
-    void faultyConnectionManagerTest() {
+    void faultyConnectionManagerWithZeroAttemptsTest() {
         FaultyConnectionManager connectionManager = new FaultyConnectionManager();
-        PopularCommandExecutor popularCommandExecutor = new PopularCommandExecutor(connectionManager, 5);
+        PopularCommandExecutor popularCommandExecutor = new PopularCommandExecutor(connectionManager, 0);
         var exception =
             assertThrows(Exception.class, popularCommandExecutor::updatePackages);
 
