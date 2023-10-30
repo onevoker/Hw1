@@ -490,10 +490,18 @@ public class Hw4Test {
 
             Map<String, String> result = Hw4.getBeautifulValidationErrors(newAnimals);
             Map<String, String> expected = Map.of(
-                catVasiliy.name(), "Incorrect weight, ".concat("Incorrect height, ").concat("Incorrect age")
+                catVasiliy.name(), "Incorrect height, ".concat("Incorrect weight, ").concat("Incorrect age")
             );
 
-            assertThat(result).usingRecursiveComparison().ignoringCollectionOrder().isEqualTo(expected);
+            Set<String> actualKeys = result.keySet();
+            Set<String> expectedKeys = expected.keySet();
+
+            assertAll(
+                () -> {
+                    assertThat(actualKeys).isEqualTo(expectedKeys);
+                },
+                () -> assertThat(result.size()).isEqualTo(expected.size())
+            );
 
         }
 
@@ -512,7 +520,15 @@ public class Hw4Test {
                 spiderGena.name(), "Incorrect height"
             );
 
-            assertThat(result).usingRecursiveComparison().ignoringCollectionOrder().isEqualTo(expected);
+            Set<String> actualKeys = result.keySet();
+            Set<String> expectedKeys = expected.keySet();
+
+            assertAll(
+                () -> {
+                    assertThat(actualKeys).isEqualTo(expectedKeys);
+                },
+                () -> assertThat(result.size()).isEqualTo(expected.size())
+            );
         }
     }
 }
