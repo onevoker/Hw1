@@ -1,8 +1,5 @@
 package edu.hw5;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class Task7 extends StringChecker {
     // содержит не менее 3 символов, причем третий символ равен 0
     public boolean subTask1(String string) {
