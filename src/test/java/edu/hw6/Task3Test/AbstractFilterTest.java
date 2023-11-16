@@ -28,7 +28,7 @@ public class AbstractFilterTest {
             entries.forEach(path -> fitNamesFiles.add(path.getFileName().toString()));
         }
 
-        assertThat(fitNamesFiles).isEqualTo(expectedNamesOfFiles);
+        assertThat(fitNamesFiles).usingRecursiveComparison().ignoringCollectionOrder().isEqualTo(expectedNamesOfFiles);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class AbstractFilterTest {
             entries.forEach(path -> fitNamesFiles.add(path.getFileName().toString()));
         }
 
-        assertThat(fitNamesFiles).isEqualTo(expectedNamesOfFiles);
+        assertThat(fitNamesFiles).usingRecursiveComparison().ignoringCollectionOrder().isEqualTo(expectedNamesOfFiles);
     }
 
     @Test
@@ -122,7 +122,7 @@ public class AbstractFilterTest {
             entries.forEach(path -> fitNamesFiles.add(path.getFileName().toString()));
         }
 
-        assertThat(fitNamesFiles).isEqualTo(expectedNamesOfFiles);
+        assertThat(fitNamesFiles).usingRecursiveComparison().ignoringCollectionOrder().isEqualTo(expectedNamesOfFiles);
     }
 
     @Test
