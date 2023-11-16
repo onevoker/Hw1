@@ -11,10 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class HackerNewsTest {
 
     @Nested
-    class hackerNewsTopStoriesTest {
+    class HackerNewsTopStoriesTest {
         private static final long[] topStories = hackerNewsTopStories();
 
         private static boolean isContainsElement(long element) {
+            assert topStories != null;
             return Arrays.stream(topStories)
                 .anyMatch(e -> e == element);
         }
