@@ -10,7 +10,7 @@ public class MainTest {
         assertDoesNotThrow(() -> main(
             ("java -jar nginx-log-stats.jar --path https://raw.githubusercontent.com/elastic/examples/master"
                 + "/Common%20Data%20Formats/nginx_logs/nginx_logs"
-                + " --from 2015-05-18")
+                + " --from 2015-05-19")
                 .split(" ")));
     }
 
@@ -18,7 +18,7 @@ public class MainTest {
     void testMainDoesNotThrowWithPath() {
         assertDoesNotThrow(() -> main(
             ("java -jar nginx-log-stats.jar --path ./src/main/java/edu/project3/logData/logs.txt"
-                + " --from 2015-05-17 --to 2015-05-20"
+                + " --from 2015-05-17 --to 2015-05-21"
                 + " --format adoc")
                 .split(" ")));
     }
