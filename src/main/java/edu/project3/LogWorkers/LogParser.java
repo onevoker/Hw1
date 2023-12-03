@@ -112,6 +112,7 @@ public class LogParser {
                 }
             }
         } catch (IOException | InterruptedException e) {
+            throw new RuntimeException("Can't read from this URI");
         }
 
         return logs;

@@ -15,12 +15,17 @@ public class LogAnalyzer {
     private LogAnalyzer() {
     }
 
+    private static boolean dateFilter(LogRecord logRecord, LocalDate dateFrom, LocalDate dateTo) {
+        LocalDateTime logRecordLocalDateTime = logRecord.timeLocal();
+        LocalDateTime startTime = LocalDateTime.of(dateFrom, LocalTime.of(0, 0, 0));
+        LocalDateTime endTime = LocalDateTime.of(dateTo, LocalTime.of(MAX_HOURS, MAX_MINUTES, MAX_SECONDS));
+
+        return logRecordLocalDateTime.isAfter(startTime) && logRecordLocalDateTime.isBefore(endTime);
+    }
+
     public static long countTotalRequests(List<LogRecord> logs, LocalDate dateFrom, LocalDate dateTo) {
         return logs.stream()
-            .filter(logRecord ->
-                logRecord.timeLocal().isAfter(LocalDateTime.of(dateFrom, LocalTime.of(0, 0, 0)))
-                    && logRecord.timeLocal()
-                    .isBefore(LocalDateTime.of(dateTo, LocalTime.of(MAX_HOURS, MAX_MINUTES, MAX_SECONDS))))
+            .filter(logRecord -> dateFilter(logRecord, dateFrom, dateTo))
             .count();
     }
 
@@ -30,10 +35,7 @@ public class LogAnalyzer {
         LocalDate dateTo
     ) {
         return logs.stream()
-            .filter(logRecord ->
-                logRecord.timeLocal().isAfter(LocalDateTime.of(dateFrom, LocalTime.of(0, 0, 0)))
-                    && logRecord.timeLocal()
-                    .isBefore(LocalDateTime.of(dateTo, LocalTime.of(MAX_HOURS, MAX_MINUTES, MAX_SECONDS))))
+            .filter(logRecord -> dateFilter(logRecord, dateFrom, dateTo))
             .collect(
                 Collectors.groupingBy(
                     log -> log.request().replaceAll("(HEAD |GET | HTTP/1.1)", ""),
@@ -47,30 +49,21 @@ public class LogAnalyzer {
         LocalDate dateTo
     ) {
         return logs.stream()
-            .filter(logRecord ->
-                logRecord.timeLocal().isAfter(LocalDateTime.of(dateFrom, LocalTime.of(0, 0, 0)))
-                    && logRecord.timeLocal()
-                    .isBefore(LocalDateTime.of(dateTo, LocalTime.of(MAX_HOURS, MAX_MINUTES, MAX_SECONDS))))
+            .filter(logRecord -> dateFilter(logRecord, dateFrom, dateTo))
             .collect(
                 Collectors.groupingBy(LogRecord::status, Collectors.summingInt(count -> 1)));
     }
 
     public static long getMediumSizeOfAnswer(List<LogRecord> logs, LocalDate dateFrom, LocalDate dateTo) {
         return logs.stream()
-            .filter(logRecord ->
-                logRecord.timeLocal().isAfter(LocalDateTime.of(dateFrom, LocalTime.of(0, 0, 0)))
-                    && logRecord.timeLocal()
-                    .isBefore(LocalDateTime.of(dateTo, LocalTime.of(MAX_HOURS, MAX_MINUTES, MAX_SECONDS))))
+            .filter(logRecord -> dateFilter(logRecord, dateFrom, dateTo))
             .mapToLong(LogRecord::bodyBytesSend)
             .sum() / logs.size();
     }
 
     public static String getTheBestUser(List<LogRecord> logs, LocalDate dateFrom, LocalDate dateTo) {
         Map<String, Integer> mapOfUsers = logs.stream()
-            .filter(logRecord ->
-                logRecord.timeLocal().isAfter(LocalDateTime.of(dateFrom, LocalTime.of(0, 0, 0)))
-                    && logRecord.timeLocal()
-                    .isBefore(LocalDateTime.of(dateTo, LocalTime.of(MAX_HOURS, MAX_MINUTES, MAX_SECONDS))))
+            .filter(logRecord -> dateFilter(logRecord, dateFrom, dateTo))
             .collect(
                 Collectors.groupingBy(LogRecord::remoteAddr, Collectors.summingInt(count -> 1)));
 
@@ -93,10 +86,7 @@ public class LogAnalyzer {
     public static LocalDate getTheBusiestDay(List<LogRecord> logs, LocalDate dateFrom, LocalDate dateTo) {
         LocalDateTime result = logs.stream()
             .parallel()
-            .filter(logRecord ->
-                logRecord.timeLocal().isAfter(LocalDateTime.of(dateFrom, LocalTime.of(0, 0, 0)))
-                    && logRecord.timeLocal()
-                    .isBefore(LocalDateTime.of(dateTo, LocalTime.of(MAX_HOURS, MAX_MINUTES, MAX_SECONDS))))
+            .filter(logRecord -> dateFilter(logRecord, dateFrom, dateTo))
             .map(LogRecord::timeLocal)
             .reduce((localDateTime, localDateTime2) ->
                 countTotalRequests(logs, localDateTime.toLocalDate(), localDateTime.toLocalDate())
@@ -113,20 +103,20 @@ public class LogAnalyzer {
         LocalDate dateTo
     ) {
         return logs.stream()
-            .filter(logRecord ->
-                logRecord.timeLocal().isAfter(LocalDateTime.of(dateFrom, LocalTime.of(0, 0, 0)))
-                    && logRecord.timeLocal()
-                    .isBefore(LocalDateTime.of(dateTo, LocalTime.of(MAX_HOURS, MAX_MINUTES, MAX_SECONDS))))
+            .filter(logRecord -> dateFilter(logRecord, dateFrom, dateTo))
             .collect(
-                Collectors.groupingBy(log -> {
-                    int lastIndex = 0;
-                    for (int i = 0; i < log.httpUserAgent().length(); ++i) {
-                        if (log.httpUserAgent().charAt(i) == ' ') {
-                            lastIndex = i;
-                            break;
+                Collectors.groupingBy(
+                    log -> {
+                        int lastIndex = 0;
+                        for (int i = 0; i < log.httpUserAgent().length(); ++i) {
+                            if (log.httpUserAgent().charAt(i) == ' ') {
+                                lastIndex = i;
+                                break;
+                            }
                         }
-                    }
-                    return log.httpUserAgent().substring(0, lastIndex);
-                }, Collectors.summingInt(count -> 1)));
+                        return log.httpUserAgent().substring(0, lastIndex);
+                    },
+                    Collectors.summingInt(count -> 1)
+                ));
     }
 }
