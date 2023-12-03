@@ -4,17 +4,20 @@ import edu.hw7.Task3.Person;
 import edu.hw7.Task3.SynchronizedPersonDatabase;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class SynchronizedPersonDatabaseTest {
-    private static final SynchronizedPersonDatabase SYNCHRONIZED_PERSON_DB = new SynchronizedPersonDatabase();
+    private static SynchronizedPersonDatabase SYNCHRONIZED_PERSON_DB;
     private static final Person PERSON_1 = new Person(1, "Alex", "Kirova", "+1234");
     private static final Person PERSON_2 = new Person(2, "Ragnar", "Lenina", "+999");
     private static final Person PERSON_3 = new Person(3, "Good", "Nope", "9232");
 
-    private void setUpTest() throws InterruptedException {
+    @BeforeEach void setUpTest() throws InterruptedException {
+        SYNCHRONIZED_PERSON_DB = new SynchronizedPersonDatabase();
+
         Thread thread1 = new Thread(() -> {
             SYNCHRONIZED_PERSON_DB.add(PERSON_1);
         });

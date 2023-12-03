@@ -2,19 +2,22 @@ package edu.hw7.Task3Test;
 
 import edu.hw7.Task3.Person;
 import edu.hw7.Task3.ReadWriteLockPersonDatabase;
-import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class ReadWriteLockPersonDatabaseTest {
-    private static final ReadWriteLockPersonDatabase R_W_L_PERSON_DB = new ReadWriteLockPersonDatabase();
+    private static ReadWriteLockPersonDatabase R_W_L_PERSON_DB;
     private static final Person PERSON_1 = new Person(1, "Alex", "Kirova", "+1234");
     private static final Person PERSON_2 = new Person(2, "Ragnar", "Lenina", "+999");
     private static final Person PERSON_3 = new Person(3, "Good", "Nope", "9232");
 
-    private void setUpTest() throws InterruptedException {
+    @BeforeEach void setUpTest() throws InterruptedException {
+        R_W_L_PERSON_DB = new ReadWriteLockPersonDatabase();
+
         Thread thread1 = new Thread(() -> {
             R_W_L_PERSON_DB.add(PERSON_1);
         });
@@ -61,9 +64,7 @@ public class ReadWriteLockPersonDatabaseTest {
     }
 
     @Test
-    void testFindByName() throws InterruptedException {
-        setUpTest();
-
+    void testFindByName() {
         assertAll(
             () -> assertThat(R_W_L_PERSON_DB.findByName("Alex")).isEqualTo(List.of(PERSON_1)),
             () -> assertThat(R_W_L_PERSON_DB.findByName("Ragnar")).isEqualTo(List.of(PERSON_2)),
@@ -74,9 +75,7 @@ public class ReadWriteLockPersonDatabaseTest {
     }
 
     @Test
-    void testFindByAddress() throws InterruptedException {
-        setUpTest();
-
+    void testFindByAddress() {
         assertAll(
             () -> assertThat(R_W_L_PERSON_DB.findByAddress("Kirova")).isEqualTo(List.of(PERSON_1)),
             () -> assertThat(R_W_L_PERSON_DB.findByAddress("Lenina")).isEqualTo(List.of(PERSON_2)),
@@ -87,9 +86,7 @@ public class ReadWriteLockPersonDatabaseTest {
     }
 
     @Test
-    void testFindByPhone() throws InterruptedException {
-        setUpTest();
-
+    void testFindByPhone() {
         assertAll(
             () -> assertThat(R_W_L_PERSON_DB.findByPhone("+1234")).isEqualTo(List.of(PERSON_1)),
             () -> assertThat(R_W_L_PERSON_DB.findByPhone("+999")).isEqualTo(List.of(PERSON_2)),
@@ -99,9 +96,7 @@ public class ReadWriteLockPersonDatabaseTest {
     }
 
     @Test
-    void testMultiFinding() throws InterruptedException {
-        setUpTest();
-
+    void testMultiFinding() {
         List<Person> expectedPersons = List.of(PERSON_1);
 
         assertThat(
