@@ -64,9 +64,7 @@ public class SynchronizedPersonDatabaseTest {
     }
 
     @Test
-    void testFindByName() throws InterruptedException {
-        setUpTest();
-
+    void testFindByName() {
         assertAll(
             () -> assertThat(SYNCHRONIZED_PERSON_DB.findByName("Alex")).isEqualTo(List.of(PERSON_1)),
             () -> assertThat(SYNCHRONIZED_PERSON_DB.findByName("Ragnar")).isEqualTo(List.of(PERSON_2)),
@@ -77,9 +75,7 @@ public class SynchronizedPersonDatabaseTest {
     }
 
     @Test
-    void testFindByAddress() throws InterruptedException {
-        setUpTest();
-
+    void testFindByAddress() {
         assertAll(
             () -> assertThat(SYNCHRONIZED_PERSON_DB.findByAddress("Kirova")).isEqualTo(List.of(PERSON_1)),
             () -> assertThat(SYNCHRONIZED_PERSON_DB.findByAddress("Lenina")).isEqualTo(List.of(PERSON_2)),
@@ -90,9 +86,7 @@ public class SynchronizedPersonDatabaseTest {
     }
 
     @Test
-    void testFindByPhone() throws InterruptedException {
-        setUpTest();
-
+    void testFindByPhone() {
         assertAll(
             () -> assertThat(SYNCHRONIZED_PERSON_DB.findByPhone("+1234")).isEqualTo(List.of(PERSON_1)),
             () -> assertThat(SYNCHRONIZED_PERSON_DB.findByPhone("+999")).isEqualTo(List.of(PERSON_2)),
@@ -102,9 +96,7 @@ public class SynchronizedPersonDatabaseTest {
     }
 
     @Test
-    void testMultiFinding() throws InterruptedException {
-        setUpTest();
-
+    void testMultiFinding() {
         List<Person> expectedPersons = List.of(PERSON_1);
 
         assertThat(
