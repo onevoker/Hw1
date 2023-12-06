@@ -26,7 +26,7 @@ public class ConsoleOutputTest {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
         };
         Maze maze = new Maze(myMaze);
-        List<Coordinate> path = maze.getPath(new Coordinate(0, 0), new Coordinate(14, 18), "BFS");
+        List<Coordinate> path = maze.getPath(new Coordinate(0, 0), new Coordinate(14, 18), "DFS");
         ConsoleOutput.printMaze(maze);
         System.out.println("Your path is:");
         ConsoleOutput.printCoordinatesOfPath(path);
