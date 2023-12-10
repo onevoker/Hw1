@@ -33,7 +33,7 @@ public class MultiThreadRenderer implements Renderer {
         short iterPerSample,
         int symmetry
     ) {
-        for (AtomicInteger number = new AtomicInteger(0); number.get() < samples; number.incrementAndGet()) {
+        for (int number = 0; number < samples; ++number) {
             service.submit(() -> {
                     renderTask(canvas, world, variations, iterPerSample, symmetry);
                 }
